@@ -10,9 +10,9 @@ RUN apt-get update && \
     apt-get install -y cloudflare-warp && \
     apt-get clean && \
     apt-get autoremove -y && \
-    curl -LO https://github.com/ginuerzh/gost/releases/download/v2.11.2/gost-linux-amd64-2.11.2.gz && \
-    gunzip gost-linux-amd64-2.11.2.gz && \
-    mv gost-linux-amd64-2.11.2 /usr/bin/gost && \
+    curl -LO https://github.com/ginuerzh/gost/releases/download/v2.11.5/gost-linux-amd64-2.11.5.gz && \
+    gunzip gost-linux-amd64-2.11.5.gz && \
+    mv gost-linux-amd64-2.11.5 /usr/bin/gost && \
     chmod +x /usr/bin/gost
 
 # Accept Cloudflare WARP TOS

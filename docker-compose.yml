@@ -2,7 +2,7 @@ version: '3'
 
 services:
   warp:
-    image: caomingjun/warp
+    build: .
     container_name: warp
     restart: always
     ports:

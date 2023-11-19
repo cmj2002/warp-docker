@@ -29,4 +29,10 @@ else
 fi
 
 # start the proxy
-gost $GOST_ARGS
+gost $GOST_ARGS &
+
+# 定义定时任务
+while true; do
+    python3 /check.py
+    sleep 15
+done

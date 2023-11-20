@@ -88,7 +88,12 @@ def set_custom_endpoint():
 def self_check():
     command = "curl --socks5 127.0.0.1:1080 https://cloudflare.com/cdn-cgi/trace"
     try:
-        subprocess.run(command, shell=True, check=True)
+        result = subprocess.run(command, shell=True, check=True, capture_output=True, text=True)
+        if 'warp=on' in result.stdout:
+            print("Check is warp.")
+        else:
+            print("Check is not warp.")
+            menu()
     except subprocess.CalledProcessError:
         menu()
 

@@ -2,6 +2,9 @@
 
 Run official [Cloudflare WARP](https://1.1.1.1/) client in Docker.
 
+> [!NOTE]
+> Cannot guarantee that the [GOST](https://github.com/ginuerzh/gost) and WARP client contained in the image are the latest versions. If necessary, please [build your own image](#build).
+
 ## Usage
 
 ### Start the container
@@ -64,6 +67,31 @@ HEALTHCHECK --interval=15s --timeout=5s --start-period=30s --retries=3 \
 ```
 
 If you don't want the container to restart automatically, you can remove `restart: always` from the `docker-compose.yml`. You can also modify the parameters of the health check through the `docker-compose.yml`.
+
+### Use other versions
+
+The tag of docker image is in the format of `{WARP_VERSION}-{GOST_VERSION}`, for example, `2023.10.120-2.11.5` means that the WARP client version is `2023.10.120` and the GOST version is `2.11.5`. If you want to use other versions, you can specify the tag in the `docker-compose.yml`.
+
+You can also use the `latest` tag to use the latest version of the image.
+
+> [!NOTE]
+> Not all version combinations are available. Do check [the list of tags in Docker Hub](https://hub.docker.com/r/caomingjun/warp/tags) before you use one. If the version you want is not available, you can [build your own image](#build).
+
+## Build
+
+You can use Github Actions to build the image yourself.
+
+1. Fork this repository.
+2. Create necessary variables and secrets in the repository settings:
+  1. variable `REGISTRY`: for example, `docker.io` (Docker Hub)
+  2. variable `IMAGE_NAME`: for example, `caomingjun/warp`
+  3. variable `DOCKER_USERNAME`: for example, `caomingjun`
+  4. secret `DOCKER_PASSWORD`: generate a token in Docker Hub and fill in the token
+3. Manually trigger the workflow `Build and push image` in the Actions tab.
+
+This will build the image with the latest version of WARP client and GOST and push it to the specified registry. You can also specify the version of GOST by giving input to the workflow. Building image with custom WARP client version is not supported yet.
+
+If you want to build the image locally, you can use [`.github/workflows/build-publish.yml`](.github/workflows/build-publish.yml) as a reference.
 
 ## Further reading
 

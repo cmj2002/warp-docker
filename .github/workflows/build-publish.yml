@@ -1,0 +1,68 @@
+name: Build and publish Docker image
+
+on:
+  workflow_dispatch:
+    inputs:
+      GOST_VERSION:
+        description: 'Version of gost. If empty, the latest version will be used.'
+        required: false
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log into registry ${{ vars.REGISTRY }}
+        uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
+        with:
+          registry: ${{ vars.REGISTRY }}
+          username: ${{ vars.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Get gost version
+        id: get-gost-version
+        run: |
+          if [ -z "${{ github.event.inputs.GOST_VERSION }}" ]; then
+            echo "GOST_VERSION=$(curl -H 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' -s https://api.github.com/repos/ginuerzh/gost/releases/latest | jq -r '.tag_name' | cut -c 2-)" >> "$GITHUB_OUTPUT"
+          else
+            echo "GOST_VERSION=${{ github.event.inputs.GOST_VERSION }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      # gost version must be <number>.<number>.<number>
+      - name: Verify gost version
+        id: verify-gost-version
+        run: |
+          if [[ ! "${{ steps.get-gost-version.outputs.GOST_VERSION }}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid gost version: ${{ steps.get-gost-version.outputs.GOST_VERSION }}"
+            exit 1
+          fi
+
+      - name: Build Docker image
+        id: build-image
+        run: |
+          docker build \
+            --build-arg GOST_VERSION=${{ steps.get-gost-version.outputs.GOST_VERSION }} \
+            --tag ${{ vars.REGISTRY }}/${{ vars.IMAGE_NAME }}:latest \
+            --file Dockerfile \
+            .
+
+      - name: Get WARP client version
+        id: get-warp-client-version
+        run: |
+          echo "WARP_VERSION=$(docker run --rm --entrypoint='' caomingjun/warp:latest warp-cli --version | cut -d ' ' -f 2)" >> "$GITHUB_OUTPUT"
+
+      - name: Tag Docker image
+        id: tag-image
+        run: |
+          docker tag \
+            ${{ vars.REGISTRY }}/${{ vars.IMAGE_NAME }}:latest \
+            ${{ vars.REGISTRY }}/${{ vars.IMAGE_NAME }}:${{ steps.get-warp-client-version.outputs.WARP_VERSION }}-${{ steps.get-gost-version.outputs.GOST_VERSION }}
+
+      - name: Push Docker image
+        id: push-image
+        run: |
+          docker push ${{ vars.REGISTRY }}/${{ vars.IMAGE_NAME }}:latest
+          docker push ${{ vars.REGISTRY }}/${{ vars.IMAGE_NAME }}:${{ steps.get-warp-client-version.outputs.WARP_VERSION }}-${{ steps.get-gost-version.outputs.GOST_VERSION }}

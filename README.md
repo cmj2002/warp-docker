@@ -36,7 +36,7 @@ services:
 Try it out to see if it works:
 
 ```bash
-curl --socks5 127.0.0.1:1080 https://cloudflare.com/cdn-cgi/trace
+curl --socks5-hostname 127.0.0.1:1080 https://cloudflare.com/cdn-cgi/trace
 ```
 
 If the output contains `warp=on` or `warp=plus`, the container is working properly. If the output contains `warp=off`, it means that the container failed to connect to the WARP service.

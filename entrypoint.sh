@@ -10,6 +10,9 @@ chmod 600 /dev/net/tun
 
 # start dbus
 mkdir -p /run/dbus
+if [ -f /run/dbus/pid ]; then
+  rm /run/dbus/pid
+fi
 dbus-daemon --config-file=/usr/share/dbus-1/system.conf
 
 # start the daemon

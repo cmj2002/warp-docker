@@ -4,19 +4,19 @@
 set -e
 
 # create a tun device
-mkdir -p /dev/net
-mknod /dev/net/tun c 10 200
-chmod 600 /dev/net/tun
+sudo mkdir -p /dev/net
+sudo mknod /dev/net/tun c 10 200
+sudo chmod 600 /dev/net/tun
 
 # start dbus
-mkdir -p /run/dbus
+sudo mkdir -p /run/dbus
 if [ -f /run/dbus/pid ]; then
-  rm /run/dbus/pid
+  sudo rm /run/dbus/pid
 fi
-dbus-daemon --config-file=/usr/share/dbus-1/system.conf
+sudo dbus-daemon --config-file=/usr/share/dbus-1/system.conf
 
 # start the daemon
-warp-svc &
+sudo warp-svc &
 
 # sleep to wait for the daemon to start, default 2 seconds
 sleep "$WARP_SLEEP"

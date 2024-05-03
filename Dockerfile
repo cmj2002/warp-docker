@@ -2,10 +2,12 @@ FROM ubuntu:22.04
 
 ARG GOST_VERSION
 
+COPY entrypoint.sh /entrypoint.sh
+
 # install dependencies
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y curl gnupg lsb-release && \
+    apt-get install -y curl gnupg lsb-release sudo && \
     curl https://pkg.cloudflareclient.com/pubkey.gpg | gpg --yes --dearmor --output /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg && \
     echo "deb [arch=amd64 signed-by=/usr/share/keyrings/cloudflare-warp-archive-keyring.gpg] https://pkg.cloudflareclient.com/ $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/cloudflare-client.list && \
     apt-get update && \
@@ -15,13 +17,16 @@ RUN apt-get update && \
     curl -LO https://github.com/ginuerzh/gost/releases/download/v${GOST_VERSION}/gost-linux-amd64-${GOST_VERSION}.gz && \
     gunzip gost-linux-amd64-${GOST_VERSION}.gz && \
     mv gost-linux-amd64-${GOST_VERSION} /usr/bin/gost && \
-    chmod +x /usr/bin/gost
+    chmod +x /usr/bin/gost && \
+    chmod +x /entrypoint.sh && \
+    useradd -m -s /bin/bash warp && \
+    echo "warp ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/warp
+
+USER warp
 
 # Accept Cloudflare WARP TOS
-RUN mkdir -p /root/.local/share/warp && \
-    echo -n 'yes' > /root/.local/share/warp/accepted-tos.txt
-
-COPY entrypoint.sh /entrypoint.sh
+RUN mkdir -p /home/warp/.local/share/warp && \
+    echo -n 'yes' > /home/warp/.local/share/warp/accepted-tos.txt
 
 ENV GOST_ARGS="-L :1080"
 ENV WARP_SLEEP=2

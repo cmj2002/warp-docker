@@ -44,11 +44,11 @@ If the output contains `warp=on` or `warp=plus`, the container is working proper
 ### Configuration
 
 You can configure the container through the following environment variables:
-  
+
 - `WARP_SLEEP`: The time to wait for the WARP daemon to start, in seconds. The default is 2 seconds. If the time is too short, it may cause the WARP daemon to not start before using the proxy, resulting in the proxy not working properly. If the time is too long, it may cause the container to take too long to start. If your server has poor performance, you can increase this value appropriately.
 
 - `WARP_LICENSE_KEY`: The license key of the WARP client, which is optional. If you have subscribed to WARP+ service, you can fill in the key in this environment variable. If you have not subscribed to WARP+ service, you can ignore this environment variable.
-  
+
 Data persistence: Use the host volume `./data` to persist the data of the WARP client. You can change the location of this directory or use other types of volumes. If you modify the `WARP_LICENSE_KEY`, please delete the `./data` directory so that the client can detect and register again.
 
 ### Change proxy type
@@ -67,6 +67,44 @@ HEALTHCHECK --interval=15s --timeout=5s --start-period=30s --retries=3 \
 ```
 
 If you don't want the container to restart automatically, you can remove `restart: always` from the `docker-compose.yml`. You can also modify the parameters of the health check through the `docker-compose.yml`.
+
+### Setting up as warp connector
+
+If you want to setup [WARP Connector](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/private-net/warp-connector)
+
+> [Note]
+> If you have already started the container, stop it and delete the data directory.
+
+1. Create mdm.xml as explained in Cloudflare WARP Connector [step 4](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/private-net/warp-connector/#4-install-a-warp-connector)
+2. Mount the mdm.xml to path `/var/lib/cloudflare-warp/mdm.xml`
+3. Start the container
+
+<details>
+
+```yaml
+services:
+  warp:
+    image: caomingjun/warp
+    container_name: warp
+    restart: always
+    ports:
+      - '1080:1080'
+    environment:
+      - WARP_SLEEP=2
+      # - WARP_LICENSE_KEY= # optional
+    cap_add:
+      - NET_ADMIN
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+      - net.ipv4.conf.all.src_valid_mark=1
+      - net.ipv4.ip_forward=1
+    volumes:
+      - ./data:/var/lib/cloudflare-warp
+      - ./config/warp/mdm.xml:/var/lib/cloudflare-warp/mdm.xml
+```
+
+<summary><i>Sample Docker Compose File</i></summary  >
+</details>
 
 ### Use with Cloudflare Zero Trust
 
@@ -100,11 +138,11 @@ You can use Github Actions to build the image yourself.
 
 1. Fork this repository.
 2. Create necessary variables and secrets in the repository settings:
-  1. variable `REGISTRY`: for example, `docker.io` (Docker Hub)
-  2. variable `IMAGE_NAME`: for example, `caomingjun/warp`
-  3. variable `DOCKER_USERNAME`: for example, `caomingjun`
-  4. secret `DOCKER_PASSWORD`: generate a token in Docker Hub and fill in the token
-3. Manually trigger the workflow `Build and push image` in the Actions tab.
+3. variable `REGISTRY`: for example, `docker.io` (Docker Hub)
+4. variable `IMAGE_NAME`: for example, `caomingjun/warp`
+5. variable `DOCKER_USERNAME`: for example, `caomingjun`
+6. secret `DOCKER_PASSWORD`: generate a token in Docker Hub and fill in the token
+7. Manually trigger the workflow `Build and push image` in the Actions tab.
 
 This will build the image with the latest version of WARP client and GOST and push it to the specified registry. You can also specify the version of GOST by giving input to the workflow. Building image with custom WARP client version is not supported yet.
 

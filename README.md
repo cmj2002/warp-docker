@@ -72,7 +72,7 @@ If you don't want the container to restart automatically, you can remove `restar
 
 If you want to setup [WARP Connector](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/private-net/warp-connector)
 
-> [Note]
+> [!NOTE]
 > If you have already started the container, stop it and delete the data directory.
 
 1. Create mdm.xml as explained in Cloudflare WARP Connector [step 4](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/private-net/warp-connector/#4-install-a-warp-connector)
@@ -138,11 +138,11 @@ You can use Github Actions to build the image yourself.
 
 1. Fork this repository.
 2. Create necessary variables and secrets in the repository settings:
-3. variable `REGISTRY`: for example, `docker.io` (Docker Hub)
-4. variable `IMAGE_NAME`: for example, `caomingjun/warp`
-5. variable `DOCKER_USERNAME`: for example, `caomingjun`
-6. secret `DOCKER_PASSWORD`: generate a token in Docker Hub and fill in the token
-7. Manually trigger the workflow `Build and push image` in the Actions tab.
+   1. variable `REGISTRY`: for example, `docker.io` (Docker Hub)
+   2. variable `IMAGE_NAME`: for example, `caomingjun/warp`
+   3. variable `DOCKER_USERNAME`: for example, `caomingjun`
+   4. secret `DOCKER_PASSWORD`: generate a token in Docker Hub and fill in the token
+3. Manually trigger the workflow `Build and push image` in the Actions tab.
 
 This will build the image with the latest version of WARP client and GOST and push it to the specified registry. You can also specify the version of GOST by giving input to the workflow. Building image with custom WARP client version is not supported yet.
 

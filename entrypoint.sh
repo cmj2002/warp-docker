@@ -26,11 +26,11 @@ if [ ! -f /var/lib/cloudflare-warp/reg.json ]; then
     # if /var/lib/cloudflare-warp/mdm.xml not exists, register the warp client
     if [ ! -f /var/lib/cloudflare-warp/mdm.xml ]; then
         warp-cli registration new && echo "Warp client registered!"
-    fi
-    # if a license key is provided, register the license
-    if [ -n "$WARP_LICENSE_KEY" ]; then
-        echo "License key found, registering license..."
-        warp-cli registration license "$WARP_LICENSE_KEY" && echo "Warp license registered!"
+        # if a license key is provided, register the license
+        if [ -n "$WARP_LICENSE_KEY" ]; then
+            echo "License key found, registering license..."
+            warp-cli registration license "$WARP_LICENSE_KEY" && echo "Warp license registered!"
+        fi
     fi
     # connect to the warp server
     warp-cli --accept-tos connect

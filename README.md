@@ -68,7 +68,7 @@ HEALTHCHECK --interval=15s --timeout=5s --start-period=30s --retries=3 \
 
 If you don't want the container to restart automatically, you can remove `restart: always` from the `docker-compose.yml`. You can also modify the parameters of the health check through the `docker-compose.yml`.
 
-### Setting up as warp connector
+### Setting up as WARP connector
 
 If you want to setup [WARP Connector](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/private-net/warp-connector)
 

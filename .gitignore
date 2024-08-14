@@ -1,1 +1,5 @@
 data/
+
+# debug github actions
+.secrets
+.vars

@@ -1,7 +1,15 @@
 FROM ubuntu:22.04
 
+ARG WARP_VERSION
 ARG GOST_VERSION
+ARG COMMIT_SHA
 ARG TARGETPLATFORM
+
+LABEL org.opencontainers.image.authors="cmj2002"
+LABEL org.opencontainers.image.url="https://github.com/cmj2002/warp-docker"
+LABEL WARP_VERSION=${WARP_VERSION}
+LABEL GOST_VERSION=${GOST_VERSION}
+LABEL COMMIT_SHA=${COMMIT_SHA}
 
 COPY entrypoint.sh /entrypoint.sh
 

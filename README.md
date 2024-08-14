@@ -59,12 +59,9 @@ If you modify the port number, you may also need to modify the port mapping in t
 
 ### Health check
 
-The health check of the container will verify if the WARP client inside the container is working properly. If the check fails, the container will automatically restart. Specifically, 15 seconds after starting, a check will be performed every 15 seconds. If the inspection fails for 3 consecutive times, the container will be marked as unhealthy and trigger an automatic restart.
+The health check of the container will verify if the WARP client inside the container is working properly. If the check fails, the container will automatically restart. Specifically, 10 seconds after starting, a check will be performed every 15 seconds. If the inspection fails for 3 consecutive times, the container will be marked as unhealthy and trigger an automatic restart.
 
-```Dockerfile
-HEALTHCHECK --interval=15s --timeout=5s --start-period=30s --retries=3 \
-  CMD curl -fsS "https://cloudflare.com/cdn-cgi/trace" | grep -qE "warp=(plus|on)" || exit 1
-```
+If `BETA_FIX_HOST_CONNECTIVITY=1` is passed, host connectivity check will be added to the health check. If the check fails, the container will automatically fix it. This may prevent you from accessing certain intranet services of your organization, as the docker network subnet may conflict with the addresses of these services. This is a beta feature and may not work in all cases. If you encounter any issues, please report them.
 
 If you don't want the container to restart automatically, you can remove `restart: always` from the `docker-compose.yml`. You can also modify the parameters of the health check through the `docker-compose.yml`.
 
@@ -130,6 +127,9 @@ The tag of docker image is in the format of `{WARP_VERSION}-{GOST_VERSION}`, for
 You can also use the `latest` tag to use the latest version of the image.
 
 > [!NOTE]
+> You can access the image built by a certain commit by using the tag `{WARP_VERSION}-{GOST_VERSION}-{COMMIT_SHA}`. Not all commits have images built.
+
+> [!NOTE]
 > Not all version combinations are available. Do check [the list of tags in Docker Hub](https://hub.docker.com/r/caomingjun/warp/tags) before you use one. If the version you want is not available, you can [build your own image](#build).
 
 ## Build
@@ -147,6 +147,26 @@ You can use Github Actions to build the image yourself.
 This will build the image with the latest version of WARP client and GOST and push it to the specified registry. You can also specify the version of GOST by giving input to the workflow. Building image with custom WARP client version is not supported yet.
 
 If you want to build the image locally, you can use [`.github/workflows/build-publish.yml`](.github/workflows/build-publish.yml) as a reference.
+
+## Common problems
+
+### Proxying UDP or even ICMP traffic
+
+The default `GOST_ARGS` is `-L :1080`, which provides HTTP and SOCKS5 proxy. If you want to proxy UDP or even ICMP traffic, you need to change the `GOST_ARGS`. Read the [GOST documentation](https://v2.gost.run/en/) for more information.
+
+### How to connect from another container
+
+You may want to use the proxy from another container and find that you cannot connect to `127.0.0.1:1080` in that container. This is because the `docker-compose.yml` only maps the port to the host, not to other containers. To solve this problem, you can use the service name as the hostname, for example, `warp:1080`. You also need to put the two containers in the same docker network.
+
+### Container runs well but cannot connect from host
+
+This issue often arises when using Zero Trust. You may find that you can run `curl --socks5-hostname 127.0.0.1:1080 https://cloudflare.com/cdn-cgi/trace` inside the container, but cannot run this command outside the container (from host or another container). This is because  Cloudflare WARP client is grabbing the traffic. There are three solutions.
+
+If you have permission to edit the [split tunnel settings](https://developers.cloudflare.com/cloudflare-one/connections/connect-devices/warp/configure-warp/route-traffic/split-tunnels/), you can add the subnet of your docker network to the split tunnel.
+
+If you don't have the permission, use `docker exec warp-test warp-cli --accept-tos tunnel dump` to list your current excluded subnets, and carefully select one of them to set as the docker network subnet. The subnet you choose should be within the [private address range](https://en.wikipedia.org/wiki/Private_network#Private_IPv4_addresses); using a public address will prevent you from accessing certain services properly. This solution can be quite brittle and manual as you may need to change the subnet when your organization changes the excluded subnets, but it won't cause any other problems.
+
+The third solution is to pass environment variable `BETA_FIX_HOST_CONNECTIVITY=1` to container, the container will add checks for host connectivity into healthchecks and automatically fix it if necessary. **This may prevent you from accessing certain intranet services of your organization**, as the docker network subnet may conflict with the addresses of these services. This is a beta feature and may not work in all cases. If you encounter any issues, please report them.
 
 ## Further reading
 

@@ -38,8 +38,17 @@ fi
 
 # add excluded networks to nft table cloudflare-warp and routing table
 for network in $networks; do
+  if ! sudo nft list table inet cloudflare-warp | grep -q "saddr $network accept"; then
+    echo "[fix-host-connectivity] Adding $network to input chain of nft table cloudflare-warp ."
     sudo nft add rule inet cloudflare-warp input ip saddr $network accept
+  fi
+  if ! sudo nft list table inet cloudflare-warp | grep -q "daddr $network accept"; then
+    echo "[fix-host-connectivity] Adding $network to output chain of nft table cloudflare-warp ."
     sudo nft add rule inet cloudflare-warp output ip daddr $network accept
+  fi
+  if ! ip rule list | grep -q "$network lookup main"; then
     # stop packet from using routing table created by CloudflareWARP
+    echo "[fix-host-connectivity] Adding routing rule for $network."
     sudo ip rule add to $network lookup main priority 10
+  fi
 done

@@ -195,3 +195,5 @@ docker run --name=warp -d  \
    --sysctl net.ipv4.conf.all.src_valid_mark=1 \
    --restart always warp
 ```
+
+curl --socks5-hostname 127.0.0.1:1080 https://chat.openai.com/cdn-cgi/trace

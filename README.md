@@ -177,3 +177,21 @@ The third solution is to pass environment variable `BETA_FIX_HOST_CONNECTIVITY=1
 ## Further reading
 
 Read in my [blog post](https://blog.caomingjun.com/run-cloudflare-warp-in-docker/en/#How-it-works).
+
+
+
+# NEW
+```
+docker run --name=warp -d  \
+   --cap-add NET_ADMIN \
+   -e WARP_SLEEP=2 \
+   -e REGISTER_WHEN_MDM_EXISTS=true \
+   -v /root/warp-docker/data:/var/lib/cloudflare-warp \
+   -v /root/warp-docker/enable_masque_mdm.xml:/var/lib/cloudflare-warp/mdm.xml \
+   -v /dev/net/:/dev/net/ \
+   --net warp-docker_default \
+   --network-alias warp -p 1080:1080 \
+   --sysctl net.ipv6.conf.all.disable_ipv6=0 \
+   --sysctl net.ipv4.conf.all.src_valid_mark=1 \
+   --restart always warp
+```

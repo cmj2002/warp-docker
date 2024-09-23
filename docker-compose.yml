@@ -9,6 +9,7 @@ services:
       - '1080:1080'
     environment:
       - WARP_SLEEP=2
+      # - REGISTER_WHEN_MDM_EXISTS=true
       # - WARP_LICENSE_KEY= # optional
     cap_add:
       - NET_ADMIN
@@ -17,3 +18,4 @@ services:
       - net.ipv4.conf.all.src_valid_mark=1
     volumes:
       - ./data:/var/lib/cloudflare-warp
+      # - ./enable_masque_mdm.xml:/var/lib/cloudflare-warp/mdm.xml

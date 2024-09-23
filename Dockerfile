@@ -47,6 +47,7 @@ RUN mkdir -p /home/warp/.local/share/warp && \
 
 ENV GOST_ARGS="-L :1080"
 ENV WARP_SLEEP=2
+ENV REGISTER_WHEN_MDM_EXISTS=
 
 HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 \
   CMD /healthcheck/index.sh

@@ -23,8 +23,8 @@ sleep "$WARP_SLEEP"
 
 # if /var/lib/cloudflare-warp/reg.json not exists, setup new warp client
 if [ ! -f /var/lib/cloudflare-warp/reg.json ]; then
-    # if /var/lib/cloudflare-warp/mdm.xml not exists, register the warp client
-    if [ ! -f /var/lib/cloudflare-warp/mdm.xml ]; then
+    # if /var/lib/cloudflare-warp/mdm.xml not exists or REGISTER_WHEN_MDM_EXISTS not empty, register the warp client
+    if [ ! -f /var/lib/cloudflare-warp/mdm.xml ] || [ -n "$REGISTER_WHEN_MDM_EXISTS" ]; then
         warp-cli registration new && echo "Warp client registered!"
         # if a license key is provided, register the license
         if [ -n "$WARP_LICENSE_KEY" ]; then

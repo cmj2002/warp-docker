@@ -4,9 +4,10 @@
 set -e
 
 # create a tun device
-sudo mkdir -p /dev/net
-sudo mknod /dev/net/tun c 10 200
-sudo chmod 600 /dev/net/tun
+# FIX sudo: unable to send audit message: Operation not permitted mknod: /dev/net/tun: Operation not permitted
+#sudo mkdir -p /dev/net
+#sudo mknod /dev/net/tun c 10 200
+#sudo chmod 600 /dev/net/tun
 
 # start dbus
 sudo mkdir -p /run/dbus

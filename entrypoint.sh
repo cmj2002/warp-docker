@@ -3,10 +3,12 @@
 # exit when any command fails
 set -e
 
-# create a tun device
-sudo mkdir -p /dev/net
-sudo mknod /dev/net/tun c 10 200
-sudo chmod 600 /dev/net/tun
+# create a tun device if not exist to ensure compatibility with Podman
+if [ ! -e /dev/net/tun ]; then
+    sudo mkdir -p /dev/net
+    sudo mknod /dev/net/tun c 10 200
+    sudo chmod 600 /dev/net/tun
+fi
 
 # start dbus
 sudo mkdir -p /run/dbus

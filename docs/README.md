@@ -7,3 +7,4 @@ This directory contains advanced usage and configurations of the project. Below 
 - [warp-connector.md](warp-connector.md): Provides steps and a sample Docker Compose file for setting up the WARP Connector.
 - [zero-trust.md](zero-trust.md): Details the steps to use the WARP client with Cloudflare Zero Trust.
 - [masque.md](masque.md): Describes how to enable MASQUE, WARP's new protocol.
+- [podman.md](podman.md): Provides information to run the container with Podman.

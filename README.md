@@ -29,6 +29,10 @@ services:
       - WARP_SLEEP=2
       # - WARP_LICENSE_KEY= # optional
     cap_add:
+      # Docker already have them, these are for podman users
+      - MKNOD
+      - AUDIT_WRITE
+      # additional required cap for warp, both for podman and docker
       - NET_ADMIN
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=0
@@ -104,6 +108,10 @@ This issue often arises when using Zero Trust. You may find that you can run `cu
 ### How to enable MASQUE / use with Zero Trust / set up WARP Connector / change health check parameters
 
 See [documentation](docs/README.md).
+
+### Permission issue when using Podman
+
+See [documentation](docs/podman.md) for explaination and solution.
 
 ## Further reading
 

@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       GOST_VERSION:
-        description: 'Version of gost. If empty, the latest version will be used.'
+        description: "Version of gost. If empty, the latest version will be used."
         required: false
         type: string
 

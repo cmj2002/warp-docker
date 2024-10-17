@@ -14,9 +14,9 @@ podman run -d \
   --device=/dev/net/tun \
   --sysctl net.ipv6.conf.all.disable_ipv6=0 \
   --sysctl net.ipv4.conf.all.src_valid_mark=1 \
-  -v "./data:/var/lib/cloudflare-warp \
+  -v ./data:/var/lib/cloudflare-warp \
   docker.io/caomingjun/warp:latest
 ```
 
 > [!NOTE]
-> I am not a Podman user, the example command is written by @tony-sung.
+> I am not a Podman user, the example command is [written by @tony-sung](https://github.com/cmj2002/warp-docker/issues/30#issuecomment-2371448959).

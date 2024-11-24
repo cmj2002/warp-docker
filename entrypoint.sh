@@ -40,5 +40,12 @@ else
     echo "Warp client already registered, skip registration"
 fi
 
+# disable qlog if DEBUG_ENABLE_QLOG is empty
+if [ -z "$DEBUG_ENABLE_QLOG" ]; then
+    warp-cli debug qlog disable
+else
+    warp-cli debug qlog enable
+fi
+
 # start the proxy
 gost $GOST_ARGS

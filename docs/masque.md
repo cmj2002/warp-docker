@@ -9,3 +9,7 @@ If you are using consumer account, you can enable MASQUE by following the steps 
 1. run `docker exec -it warp bash` to get into the container shell
 2. run `warp-cli tunnel protocol set MASQUE` to enable MASQUE
 3. run `warp-cli settings list` to check if MASQUE is enabled
+
+## QLog
+
+By default, QLog is disabled in the image due to [a known issue that it will generate a large amount of logs](https://www.reddit.com/r/CloudFlare/comments/1g6h9rt/what_are_qlogs/). If you want to enable QLog, you can pass `DEBUG_ENABLE_QLOG=true` to the container.

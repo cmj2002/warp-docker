@@ -3,11 +3,10 @@
 # exit when any command fails
 set -e
 
-# create a tun device if not exist to ensure compatibility with Podman
+# check if /dev/net/tun is available
 if [ ! -e /dev/net/tun ]; then
-    sudo mkdir -p /dev/net
-    sudo mknod /dev/net/tun c 10 200
-    sudo chmod 600 /dev/net/tun
+    echo "CRITIC: /dev/net/tun not pass, check https://github.com/cmj2002/warp-docker/blob/main/docs/tun-not-permitted.md for more information"
+    exit 1
 fi
 
 # start dbus

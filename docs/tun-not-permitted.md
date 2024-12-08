@@ -1,5 +1,7 @@
 # Solution to open tun operation not permitted
 
+You are seeing this page because you encounter `{ err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" }, context: "open tun" }` or `CRITIC: /dev/net/tun not pass`.
+
 ## Problem
 
 On Nov 21, 2024, [containerd](https://github.com/containerd/containerd) released version [1.7.24](https://github.com/containerd/containerd/releases/tag/v1.7.24) which updated [runc](https://github.com/opencontainers/runc) to 1.2.2 and introduced [a breaking change that remove tun/tap from the default device rules](https://github.com/opencontainers/runc/pull/3468).

@@ -9,3 +9,4 @@ This directory contains advanced usage and configurations of the project. Below 
 - [masque.md](masque.md): Describes how to enable MASQUE, WARP's new protocol.
 - [podman.md](podman.md): Provides information to run the container with Podman.
 - [proxy-mode.md](proxy-mode.md): instructions on how to use the container in WARP's proxy mode.
+- [tun-not-permitted.md](tun-not-permitted.md): Explains the error message `{ err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" }, context: "open tun" }` and how to resolve it.

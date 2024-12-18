@@ -3,7 +3,8 @@
 # exit when any command fails
 set -e
 
-# create a tun device if not exist to ensure compatibility with Podman
+# create a tun device if not exist
+# allow passing device to ensure compatibility with Podman
 if [ ! -e /dev/net/tun ]; then
     sudo mkdir -p /dev/net
     sudo mknod /dev/net/tun c 10 200

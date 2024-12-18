@@ -36,8 +36,6 @@ services:
     image: caomingjun/warp
     container_name: warp
     restart: always
-    devices:
-      - /dev/net/tun:/dev/net/tun
     ports:
       - "1080:1080"
     environment:

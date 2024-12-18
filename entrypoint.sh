@@ -3,17 +3,11 @@
 # exit when any command fails
 set -e
 
-# check if /dev/net/tun is available
+# create a tun device if not exist to ensure compatibility with Podman
 if [ ! -e /dev/net/tun ]; then
-    if [ -n "$LEGACY_TUN_SUPPORT" ]; then
-        echo "WARN: LEGACY_TUN_SUPPORT enabled, creating /dev/net/tun..."
-        sudo mkdir -p /dev/net
-        sudo mknod /dev/net/tun c 10 200
-        sudo chmod 600 /dev/net/tun
-    else
-        echo "CRITIC: /dev/net/tun not pass, check https://github.com/cmj2002/warp-docker/blob/main/docs/tun-not-permitted.md for more information"
-        exit 1
-    fi
+    sudo mkdir -p /dev/net
+    sudo mknod /dev/net/tun c 10 200
+    sudo chmod 600 /dev/net/tun
 fi
 
 # start dbus

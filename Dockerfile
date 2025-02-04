@@ -68,6 +68,7 @@ ENV WARP_SLEEP=2
 ENV REGISTER_WHEN_MDM_EXISTS=
 ENV WARP_LICENSE_KEY=
 ENV BETA_FIX_HOST_CONNECTIVITY=
+ENV WARP_ENABLE_NAT=
 
 HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 \
   CMD /healthcheck/index.sh

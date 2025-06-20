@@ -3,7 +3,7 @@
 If you want to use the WARP client with Cloudflare Zero Trust, just start the container without specifying license key, use `docker exec -it warp bash` to get into the container and follow these steps:
 
 1. `warp-cli registration delete` to delete current registration
-2. `warp-cli teams-enroll <your-team-name>` to enroll the device
+2. `warp-cli registration new <your-team-name>` to enroll the device
 3. Open the link in the output in a browser and follow the instructions to complete the registration
 4. On the success page, right-click and select **View Page Source**.
 5. Find the HTML metadata tag that contains the token. For example, `<meta http-equiv="refresh" content"=0;url=com.cloudflare.warp://acmecorp.cloudflareaccess.com/auth?token=yeooilknmasdlfnlnsadfojDSFJndf_kjnasdf..." />`

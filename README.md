@@ -119,7 +119,7 @@ Error like `{ err: Os { code: 1, kind: PermissionDenied, message: "Operation not
 If you are using Synology or QNAP NAS, you may encounter an error like `Failed to run NFT command`. This is because both Synology and QNAP use old iptables, while WARP uses nftables. It can't be easily fixed since nftables need to be added when the kernel is compiled.
 
 Possible solutions:
-- If you don't need UDP support, use the WAPR's proxy mode by following the instructions in the [documentation](docs/proxy-mode.md).
+- If you don't need UDP support, use the WARP's proxy mode by following the instructions in the [documentation](docs/proxy-mode.md).
 - If you need UDP support, run a fully virtualized Linux system (KVM) on your NAS or use another device to run the container.
 
 References that might help:

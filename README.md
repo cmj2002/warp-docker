@@ -16,7 +16,7 @@ version: "3"
 
 services:
   psiphon:
-    image: ghcr.io/your-username/psiphon-docker:latest
+    image: ghcr.io/javadalmasi/warp-docker:latest
     container_name: psiphon
     restart: always
     ports:

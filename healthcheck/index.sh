@@ -3,12 +3,14 @@
 # exit when any command fails
 set -e
 
-# get where the script is located
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# check if the proxy is working
+PROXY_IP=$(curl -x socks5h://127.0.0.1:1080 https://cloudflare.com/cdn-cgi/trace | grep ip= | cut -d= -f2)
+SERVER_IP=$(curl https://cloudflare.com/cdn-cgi/trace | grep ip= | cut -d= -f2)
 
-bash $DIR/connected-to-warp.sh
-
-# if BETA_FIX_HOST_CONNECTIVITY is set, run fix-host-connectivity.sh
-if [ -n "$BETA_FIX_HOST_CONNECTIVITY" ]; then
-    bash $DIR/fix-host-connectivity.sh
+if [ "$PROXY_IP" != "$SERVER_IP" ]; then
+  echo "Health check passed!"
+  exit 0
+else
+  echo "Health check failed!"
+  exit 1
 fi
